@@ -1,0 +1,5 @@
+lib/nagios_config/nagios_config_parser.rb
+vendor/gems/gems
+vendor/gems/specifications
+vendor/gems/doc
+vendor/gems/environment.rb

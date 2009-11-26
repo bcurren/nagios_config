@@ -1,0 +1,52 @@
+grammar NagiosConfig
+  rule program
+    (space object_definition space)*
+  end
+  
+  rule object_definition
+    'define' space_required definition_type space '{' space directives space '}' space
+  end
+  
+  rule directives
+    (directive)*
+  end
+  
+  rule directive
+    space directive_name space_required_no_newline directive_value space_no_newline newline
+  end
+  
+  rule directive_name
+    'host_name' / 'alias' / 'display_name' / 'address' / 'parents' / 'hostgroups' / 
+    'check_command'
+  end
+  
+  rule directive_value
+    [^\n\r\f]+
+  end
+  
+  rule definition_type
+    'hostgroup' / 'hostdependency' / 'hostescalation' / 'hostextinfo' / 'host' /
+    'servicedependency' / 'serviceescalation' / 'serviceextinfo' / 'servicegroup' / 'service' /
+    'contactgroup' / 'contact' / 'timeperiod' / 'command'
+  end
+  
+  rule space_required_no_newline
+    [ \t]+
+  end
+  
+  rule space_no_newline
+    [ \t]*
+  end
+  
+  rule space_required
+    [ \t\n]+
+  end
+  
+  rule space
+    [ \t\n]*
+  end
+  
+  rule newline
+    [\n\r\f]+
+  end
+end
