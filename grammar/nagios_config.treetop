@@ -1,18 +1,51 @@
 grammar NagiosConfig
   rule program
-    (space object_definition space)*
+    object_definition* {
+      def build
+        elements.map { |od| od.build }
+      end
+    }
   end
   
   rule object_definition
-    'define' space_required definition_type space '{' space directives space '}' space
+    space 'define' space_required definition_type space '{' space directives space '}' space {
+      def build
+        object = case definition_type.text_value
+        when "host"
+          Host.new
+        end
+        
+        directives.elements.each do |d|
+          directive = d.build
+          name = directive.first
+          value = directive.last
+          
+          object.send("#{name}=", value)
+        end
+        
+        object
+      end
+    }
   end
   
   rule directives
-    (directive)*
+    directive* {
+      def build
+        elements.map { |od| od.build }
+      end
+    }
   end
   
   rule directive
-    space directive_name space_required_no_newline directive_value space_no_newline newline
+    space directive_name space_required_no_newline directive_value (eol_comment / space_no_newline) newline {
+      def build
+        [directive_name.text_value, directive_value.text_value]
+      end
+    }
+  end
+  
+  rule eol_comment
+    ';' [^\n\r\f]*
   end
   
   rule directive_name
@@ -21,7 +54,7 @@ grammar NagiosConfig
   end
   
   rule directive_value
-    [^\n\r\f]+
+    [^\n\r\f;]+
   end
   
   rule definition_type

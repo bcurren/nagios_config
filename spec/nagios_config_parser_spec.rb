@@ -3,15 +3,7 @@ describe NagiosConfigParser do
     parser = NagiosConfigParser.new
 
     file = '
-      define hostgroup {
-        host_name      computername.example.com
-        alias          computername
-        display_name   My Computer
-        address        192.168.10.1
-        parents        computername2.example.com
-        hostgroups     group1, group2
-        check_command  check_something
-      }
+      define hostgroup {}
       define hostdependency {}
       define hostescalation {}
       define hostextinfo {}
@@ -27,6 +19,6 @@ describe NagiosConfigParser do
       define command {}
     '
     result = parser.parse(file)
-    result.should_not == nil
+    result.should_not be_nil
   end
 end
